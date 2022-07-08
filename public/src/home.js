@@ -61,25 +61,23 @@ function getMostPopularBooks(books) {
 }
 
 function getMostPopularAuthors(books, authors) {
-  //create returnArr
-  let returnArr = [];
-  
-  //iterate over each author in authors arr
-  authors.forEach( author => {
-    //create template for authorObj w/ name set up
-    let authorObj = {
-      name:  author.name.first + " " + author.name.last,
-      count: 0,
+  //create returnArr and map info from authors arr
+  let returnArr = authors.map(authorObj =>{
+    //arr of author's books
+    const authorBookArr = books.filter(book => book.authorId === authorObj.id);
+    //obtain total borrows of each author's books
+    const numBorrows = authorBookArr.reduce((runningSum, curBook) => runningSum + curBook.borrows.length, 0);
+    //create authorInfo obj to return to new arr
+    const authorInfo = {
+      name: authorObj.name.first + " " + authorObj.name.last,
+      count: numBorrows,
     };
-    //iterate over each item in books arr
-    books.forEach( book => {
-      //if item matches author id, increment count
-      book.authorId == author.id ? authorObj.count+=book.borrows.length : null;
- 
-    })
-    //push authorObj with correct count and name to return array
-    returnArr.push(authorObj);
+    //return info obj
+    return authorInfo;
+    
   });
+  
+
   
   //sort arr and limit to 5 items
   returnArr.sort((a,b) => b.count - a.count);
